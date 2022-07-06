@@ -11,8 +11,8 @@
 module load Stacks/2.59-foss-2020a
 module load VCFtools/0.1.16-GCC-10.2.0
 
-# set stacks directory to script folder
-stacks_dir=$(dirname (realpath $0))
+# set working directory to script folder
+dir=$(dirname (realpath $0))
 
 # read command line arguments
 while getopts 'P:a:o:M:Q:m:r:p:k:' OPTION; do
@@ -52,7 +52,7 @@ while getopts 'P:a:o:M:Q:m:r:p:k:' OPTION; do
 done
 
 # set output path
-out_dir=${stacks_dir}/${output_name}
+out_dir=${dir}/${output_name}
 mkdir -p ${outdir}
 
 # declare empty arrays for popmap file
@@ -63,10 +63,10 @@ pops=()
 while read -r filename pop; do
   popmaps+=(${filename})
   pops+=(${pop})
-done < ${stacks_dir}/info/${popmap_list}
+done < ${dir}/info/${popmap_list}
 
 # run gstacks
-gstacks -I ${stacks_dir}/alignments/${alignment} \
+gstacks -I ${dir}/aligned/${alignment} \
         -O ${out_dir} \
         -M ${stacks_dir}/info/${popmaps[0]} \
         --model ${model} \
@@ -121,7 +121,7 @@ for file in ${popmaps[@]}; do
     # re-run populations on filtered vcf file
     populations -V populations.snps.filtered.vcf \
                 -O filtered \
-                -M ${stacks_dir}/info/${popmaps[0]} \
+                -M ${dir}/info/${popmaps[0]} \
                 --fstats
 
     # thin SNPs within 100kb window
@@ -136,7 +136,7 @@ for file in ${popmaps[@]}; do
     # re-run populations on thinned vcf file
     populations -V populations.snps.t100000.vcf \
                 -O thinned \
-                -M ${stacks_dir}/info/${popmaps[0]} \
+                -M ${dir}/info/${popmaps[0]} \
                 --fstats
 
     # create whitelist of thinned SNPs
@@ -146,7 +146,7 @@ for file in ${popmaps[@]}; do
   else
     populations -P ${out_dir} \
                 -O ${out_subdir} \
-                -M ${stacks_dir}/info/${popmaps[${counter}-1]} \
+                -M ${dir}/info/${popmaps[${counter}-1]} \
                 -W ${out_dir}/whitelist.tsv \
                 -r ${min_perc_ind} \
                 --max_obs_het ${max_het} \

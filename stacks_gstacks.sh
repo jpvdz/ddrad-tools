@@ -10,8 +10,8 @@
 # load modules
 module load Stacks/2.59-foss-2020a
 
-# set stacks directory to script folder
-stacks_dir=$(dirname (realpath $0))
+# set working directory to script folder
+dir=$(dirname (realpath $0))
 
 # read command line arguments
 while getopts 'P:a:o:M:Q:' OPTION; do
@@ -26,7 +26,7 @@ while getopts 'P:a:o:M:Q:' OPTION; do
         ;;
     Q)  mapq=${OPTARG}
         ;;
-    ?) printf "How to run %s: \n\
+    ?)  printf "How to run %s: \n\
                 -P : name of popmap file\n\
                 -a : alignment directory name (under 'alignments')\n\
                 -o : output directory name\n\
@@ -38,11 +38,11 @@ while getopts 'P:a:o:M:Q:' OPTION; do
 done
 
 # set output path
-out_dir=${stacks_dir}/output/${output_name}
+out_dir=${dir}/output/${output_name}
 mkdir -p ${out_dir}
 
 # set popmap directory
-popmap=${stacks_dir}/popmap/${popmap_file}
+popmap=${dir}/popmap/${popmap_file}
 
 # run gstacks
 gstacks -I ${alignment} \

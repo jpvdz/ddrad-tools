@@ -11,8 +11,8 @@
 module load Stacks/2.59-foss-2020a
 module load VCFtools/0.1.16-GCC-10.2.0
 
-# set stacks directory to script folder
-stacks_dir=$(dirname (realpath $0))
+# set working directory to script folder
+dir=$(dirname (realpath $0))
 
 # read command line arguments
 while getopts 'P:i:o:Q:m:r:p:R:k:t:' OPTION; do
@@ -37,7 +37,7 @@ while getopts 'P:i:o:Q:m:r:p:R:k:t:' OPTION; do
         ;;
     t)  thin_window_size=${OPTARG}
         ;;
-    h)  printf "How to run %s: \n\
+    ?)  printf "How to run %s: \n\
                 -P : name of popmap list file\n\
                 -i : alignment directory name (under 'alignments')\n\
                 -o : output directory name\n\
@@ -56,12 +56,12 @@ while getopts 'P:i:o:Q:m:r:p:R:k:t:' OPTION; do
 done
 
 # set input and output path
-input_dir=${stacks_dir}/output/${input_name}
+input_dir=${dir}/output/${input_name}
 out_dir=${input_dir}/${output_name}
 mkdir -p ${out_dir}
 
 # set popmap directory
-popmap=${stacks_dir}/popmap/${popmap_file}
+popmap=${dir}/popmap/${popmap_file}
 
 # run populations
 populations -P ${input_dir} \
